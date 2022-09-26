@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class EnemyHealth : MonoBehaviour
 {
-    public static Action OnEnemyKilled;
+    public static Action<Enemy> OnEnemyKilled;
     public static Action<Enemy> OnEnemyHit;
 
     [SerializeField] private GameObject healthBarPrefab;
@@ -15,7 +15,7 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private float initialHealth = 10f;
     [SerializeField] private float maxHealth = 10f;
 
-    private float CurrentHealth { get; set; }
+    public float CurrentHealth { get; set; }
 
     private Image _healthBar;
     private Enemy _enemy;
@@ -76,8 +76,8 @@ public class EnemyHealth : MonoBehaviour
         //_healthBar.fillAmount = 1;
         ResetHealth();
 
-        OnEnemyKilled?.Invoke();
+        OnEnemyKilled?.Invoke(_enemy);
 
-        ObjectPooler.ReturnToPool(gameObject);
+        //ObjectPooler.ReturnToPool(gameObject);
     }
 }

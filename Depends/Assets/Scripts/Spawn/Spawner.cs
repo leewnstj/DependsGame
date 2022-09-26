@@ -84,7 +84,7 @@ public class Spawner : MonoBehaviour
         return randomTimer;
     }
 
-    private void RecordEnemy()
+    private void RecordEnemy(Enemy enemy)
     {
         _enemiesRemainning--;
         if(_enemiesRemainning <= 0)

@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    public static Action OnEndReached;
+    public static Action<Enemy> OnEndReached;
 
     [SerializeField] private float moveSpeed = 3.0f;
 
@@ -17,8 +18,10 @@ public class Enemy : MonoBehaviour
     public Vector3 CurrentPointPosition => wayPoint.GetWayPointPosition(_currentWaypointIndex);
 
     private int _currentWaypointIndex;
+    private Vector3 _lastPointPosition;
 
     private EnemyHealth _enemyHealth;
+    private SpriteRenderer _spriteRenderer;
 
     private void Start()
     {
@@ -26,11 +29,14 @@ public class Enemy : MonoBehaviour
         _enemyHealth = GetComponent<EnemyHealth>();
 
         MoveSpeed = moveSpeed;
+        _lastPointPosition = transform.position;
+        _spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
         Move();
+        Rotate();
 
         if(CurrentPointPositionReached())
         {
@@ -59,9 +65,22 @@ public class Enemy : MonoBehaviour
         float distanceToNextPointPosition = (transform.position - CurrentPointPosition).magnitude;
         if(distanceToNextPointPosition < 0.1f)
         {
+            _lastPointPosition = transform.position;
             return true;
         }
         return false;
+    }
+
+    private void Rotate()
+    {
+        if(CurrentPointPosition.x > _lastPointPosition.x)
+        {
+            _spriteRenderer.flipX = false;
+        }
+        else
+        {
+            _spriteRenderer.flipX = true;
+        }
     }
 
     private void UpdateCurrentPointIndex()
@@ -84,7 +103,7 @@ public class Enemy : MonoBehaviour
     {
         if(OnEndReached != null)
         {
-            OnEndReached.Invoke();
+            OnEndReached.Invoke(this);
         }
 
         _enemyHealth.ResetHealth();
