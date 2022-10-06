@@ -23,10 +23,13 @@ public class Enemy : MonoBehaviour
     private EnemyHealth _enemyHealth;
     private SpriteRenderer _spriteRenderer;
 
+    public EnemyHealth EnemyHealth { get; set; }
+
     private void Start()
     {
         _currentWaypointIndex = 0;
         _enemyHealth = GetComponent<EnemyHealth>();
+        EnemyHealth = GetComponent<EnemyHealth>();
 
         MoveSpeed = moveSpeed;
         _lastPointPosition = transform.position;
